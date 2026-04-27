@@ -1,0 +1,32 @@
+{
+  "name": "@ledgermem/gdrive-sync",
+  "version": "0.1.0",
+  "description": "LedgerMem Google Drive connector — recursively syncs Drive folders into LedgerMem.",
+  "type": "module",
+  "main": "dist/index.js",
+  "bin": {
+    "gdrive-sync": "dist/cli.js"
+  },
+  "scripts": {
+    "build": "tsc",
+    "start": "node dist/cli.js",
+    "dev": "tsx src/cli.ts",
+    "test": "vitest run",
+    "lint": "tsc --noEmit"
+  },
+  "engines": {
+    "node": ">=22"
+  },
+  "dependencies": {
+    "@ledgermem/memory": "^0.1.0",
+    "dotenv": "^16.4.5",
+    "googleapis": "^144.0.0"
+  },
+  "devDependencies": {
+    "@types/node": "^22.7.4",
+    "tsx": "^4.19.1",
+    "typescript": "^5.6.2",
+    "vitest": "^2.1.1"
+  },
+  "license": "MIT"
+}
