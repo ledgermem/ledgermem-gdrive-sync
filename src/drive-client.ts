@@ -16,11 +16,17 @@ export interface DriveClientLike {
 
 const FOLDER_MIME = "application/vnd.google-apps.folder";
 
+// Native Google Workspace types are exported via files.export.
+// Plain-text-friendly MIME types are downloaded directly via files.get.
+// PDFs and Office binaries are intentionally excluded — without a real text
+// extractor (pdf-parse / mammoth) they would be ingested as binary garbage.
 export const TEXT_EXPORTS: Record<string, string> = {
   "application/vnd.google-apps.document": "text/plain",
   "application/vnd.google-apps.spreadsheet": "text/csv",
   "application/vnd.google-apps.presentation": "text/plain",
-  "application/pdf": "text/plain",
+  "text/plain": "text/plain",
+  "text/markdown": "text/markdown",
+  "text/csv": "text/csv",
 };
 
 export class GoogleDriveClient implements DriveClientLike {

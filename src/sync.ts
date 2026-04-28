@@ -57,6 +57,12 @@ export async function syncFolder(opts: SyncOptions): Promise<SyncResult> {
         continue;
       }
       const text = await opts.drive.exportAsText(file.id, file.mimeType);
+      // Skip empty / whitespace-only exports — embedding empty strings just
+      // pollutes the index and burns tokens on retrieval.
+      if (text.trim().length === 0) {
+        skipped += 1;
+        continue;
+      }
       await opts.memory.add(text, {
         metadata: {
           source: "gdrive",

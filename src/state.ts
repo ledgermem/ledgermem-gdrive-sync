@@ -1,4 +1,10 @@
-import { existsSync, mkdirSync, readFileSync, writeFileSync } from "node:fs";
+import {
+  existsSync,
+  mkdirSync,
+  readFileSync,
+  renameSync,
+  writeFileSync,
+} from "node:fs";
 import { dirname } from "node:path";
 
 export interface FileState {
@@ -22,5 +28,9 @@ export function loadState(path: string): SyncState {
 
 export function saveState(path: string, state: SyncState): void {
   mkdirSync(dirname(path), { recursive: true });
-  writeFileSync(path, JSON.stringify(state, null, 2), "utf8");
+  // Atomic write: write to a sibling tmp file then rename. Prevents corruption
+  // if the process is killed mid-write or two runs race.
+  const tmp = `${path}.${process.pid}.tmp`;
+  writeFileSync(tmp, JSON.stringify(state, null, 2), "utf8");
+  renameSync(tmp, path);
 }
