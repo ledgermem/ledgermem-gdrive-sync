@@ -35,11 +35,13 @@ export class GoogleDriveClient implements DriveClientLike {
   }
 
   async listFolderChildren(folderId: string): Promise<DriveFile[]> {
+    // Drive query is single-quoted; escape backslashes and single-quotes to avoid injection.
+    const safeFolderId = folderId.replace(/\\/g, "\\\\").replace(/'/g, "\\'");
     const out: DriveFile[] = [];
     let pageToken: string | undefined = undefined;
     do {
       const res = await this.drive.files.list({
-        q: `'${folderId}' in parents and trashed = false`,
+        q: `'${safeFolderId}' in parents and trashed = false`,
         fields:
           "nextPageToken, files(id, name, mimeType, modifiedTime, parents, webViewLink)",
         pageSize: 100,

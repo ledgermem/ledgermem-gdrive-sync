@@ -31,17 +31,20 @@ function isIngestable(mimeType: string): boolean {
 export async function syncFolder(opts: SyncOptions): Promise<SyncResult> {
   const state = loadState(opts.statePath);
   const queue: string[] = [opts.folderId];
+  const visited = new Set<string>();
   let ingested = 0;
   let skipped = 0;
   let visitedFolders = 0;
 
   while (queue.length > 0) {
     const folderId = queue.shift() as string;
+    if (visited.has(folderId)) continue;
+    visited.add(folderId);
     visitedFolders += 1;
     const children = await opts.drive.listFolderChildren(folderId);
     for (const file of children) {
       if (isFolder(file.mimeType)) {
-        queue.push(file.id);
+        if (!visited.has(file.id)) queue.push(file.id);
         continue;
       }
       if (!isIngestable(file.mimeType)) {
@@ -69,6 +72,8 @@ export async function syncFolder(opts: SyncOptions): Promise<SyncResult> {
         ingestedAt: new Date().toISOString(),
       };
       ingested += 1;
+      // Persist incrementally so a mid-run crash doesn't cause re-ingest of everything.
+      saveState(opts.statePath, state);
     }
   }
 
