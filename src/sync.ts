@@ -5,7 +5,7 @@ import {
   type DriveClientLike,
   type DriveFile,
 } from "./drive-client.js";
-import { loadState, saveState } from "./state.js";
+import { acquireLock, loadState, saveState } from "./state.js";
 
 export interface MemoryClient {
   add: LedgerMem["add"];
@@ -29,6 +29,18 @@ function isIngestable(mimeType: string): boolean {
 }
 
 export async function syncFolder(opts: SyncOptions): Promise<SyncResult> {
+  // Take an exclusive lock so a cron run and a manual run can't both write
+  // state.files concurrently — last-writer-wins would silently lose the other
+  // run's progress and force re-ingest of those files next time.
+  const release = acquireLock(opts.statePath);
+  try {
+    return await runSync(opts);
+  } finally {
+    release();
+  }
+}
+
+async function runSync(opts: SyncOptions): Promise<SyncResult> {
   const state = loadState(opts.statePath);
   const queue: string[] = [opts.folderId];
   const visited = new Set<string>();
