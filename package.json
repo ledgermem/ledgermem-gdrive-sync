@@ -1,7 +1,7 @@
 {
-  "name": "@ledgermem/gdrive-sync",
+  "name": "@getmnemo/gdrive-sync",
   "version": "0.1.0",
-  "description": "LedgerMem Google Drive connector — recursively syncs Drive folders into LedgerMem.",
+  "description": "Mnemo Google Drive connector — recursively syncs Drive folders into Mnemo.",
   "type": "module",
   "main": "dist/index.js",
   "bin": {
@@ -18,7 +18,7 @@
     "node": ">=22"
   },
   "dependencies": {
-    "@ledgermem/memory": "^0.1.0",
+    "@getmnemo/memory": "^0.1.0",
     "dotenv": "^16.4.5",
     "googleapis": "^144.0.0"
   },

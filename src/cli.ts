@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 import "dotenv/config";
-import { LedgerMem } from "@ledgermem/memory";
+import { Mnemo } from "@getmnemo/memory";
 import { loadConfig } from "./config.js";
 import { GoogleDriveClient } from "./drive-client.js";
 import { syncFolder } from "./sync.js";
@@ -25,9 +25,9 @@ async function main(): Promise<void> {
   }
   const cfg = loadConfig();
   const folderId = args.folder ?? cfg.folderId;
-  const memory = new LedgerMem({
-    apiKey: cfg.ledgermemApiKey,
-    workspaceId: cfg.ledgermemWorkspaceId,
+  const memory = new Mnemo({
+    apiKey: cfg.getmnemoApiKey,
+    workspaceId: cfg.getmnemoWorkspaceId,
   });
   const drive = new GoogleDriveClient(cfg.credentialsPath);
   const result = await syncFolder({
