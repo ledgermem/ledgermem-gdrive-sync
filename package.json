@@ -1,5 +1,5 @@
 {
-  "name": "@getmnemo/gdrive-sync",
+  "name": "@mnemo/gdrive-sync",
   "version": "0.1.0",
   "description": "Mnemo Google Drive connector — recursively syncs Drive folders into Mnemo.",
   "type": "module",
@@ -18,7 +18,7 @@
     "node": ">=22"
   },
   "dependencies": {
-    "@getmnemo/memory": "^0.1.0",
+    "@mnemo/memory": "^0.1.0",
     "dotenv": "^16.4.5",
     "googleapis": "^144.0.0"
   },
